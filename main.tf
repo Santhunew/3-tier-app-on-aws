@@ -181,7 +181,6 @@ resource "aws_instance" "MyEC2" {
   instance_type = "t2.micro"
   key_name      = "Santhu"
   subnet_id     = aws_subnet.public[count.index % 2].id
-  iam_instance_profile = aws_iam_instance_profile.MyInstanceProfile.name
 }
 
 

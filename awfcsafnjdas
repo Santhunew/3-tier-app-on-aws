@@ -1,0 +1,47 @@
+[33mcommit 1e6c8d0e2baec10abe535e7418965bc40e46557a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 15:57:34 2025 +0530
+
+    The latest modification for ec2NACLs
+
+[33mcommit df40d3ed50f8bb0ea6fa0fd6a10a275c400f30b1[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 15:51:48 2025 +0530
+
+    The latest modification of main.tf
+
+[33mcommit 4b46ed180f7dd624e6117509cb651b6b06d96eff[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 14:52:36 2025 +0530
+
+    backend data again
+
+[33mcommit 5dd56aca3aa4be7746f055094abd575713a03c57[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 11:25:08 2025 +0530
+
+    backend data update
+
+[33mcommit da1b1f2ec17d795fbb3415f039995d4d85e48824[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 11:22:30 2025 +0530
+
+    modified the data
+
+[33mcommit aee4933b9e329ac8cbec1b6cb4a2e4e94f58b639[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 11:14:53 2025 +0530
+
+    Adding github action1
+
+[33mcommit 42e1ea905f4cc61cc011758a15e979d841fa8541[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 11:10:17 2025 +0530
+
+    Adding github action
+
+[33mcommit 89c5aae1fdbdd3dc3f62a4507c72ce2483ef104b[m
+Author: santhosh <santhosh.ss7878@gmail.com>
+Date:   Sun Mar 9 10:53:05 2025 +0530
+
+    push to git repo
