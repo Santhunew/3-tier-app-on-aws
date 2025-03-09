@@ -9,16 +9,46 @@ resource "aws_internet_gateway" "MyIGW" {
   vpc_id = aws_vpc.MyVPC.id
 }
 
-# Nat Gateway
-resource "aws_nat_gateway" "MyNatGateway" {
-    subnet_id = aws_subnet.public[0].id
-    allocation_id = aws_eip.MyEIP.id
+#Route tabler for public and private subnet's
+# Public Route Table
+resource "aws_route" "public_internet_access" {
+  route_table_id         = aws_route_table.public_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  gateway_id             = aws_internet_gateway.MyIGW.id
 }
 
-resource "aws_nat" "Nat" {
-    subnet_id = aws_subnet.public[0].id
-    allocation_id = aws_eip.MyEIP.id
+resource "aws_route_table_association" "public_assoc" {
+  count = length(aws_subnet.public)
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public_route_table.id
 }
+
+# Private Route Table
+resource "aws_route" "private_nat_access" {
+  route_table_id         = aws_route_table.private_route_table.id
+  destination_cidr_block = "0.0.0.0/0"
+  nat_gateway_id         = aws_nat_gateway.MyNatGateway.id
+}
+
+resource "aws_route_table_association" "private_assoc" {
+  count = length(aws_subnet.private)
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private_route_table.id
+}
+
+
+# Nat Gateway
+# Elastic IP for NAT Gateway
+resource "aws_eip" "MyEIP" {
+  domain = "vpc"
+}
+
+
+resource "aws_nat_gateway" "MyNatGateway" {
+  subnet_id     = aws_subnet.public[0].id
+  allocation_id = aws_eip.MyEIP.id
+}
+
 
 #create public subnet and private subnet
 resource "aws_subnet" "public" {
@@ -61,6 +91,7 @@ resource "aws_waf_web_acl" "WAF" {
     type = "ALLOW"
   }
 }
+
 
 #Deploy AWS CloudFront, S3, EC2, and RDS
 
@@ -150,8 +181,7 @@ resource "aws_instance" "MyEC2" {
   instance_type = "t2.micro"
   key_name = "Santhu"
   subnet_id = aws_subnet.public[count.index % 2].id
-  security_groups = [aws_security_group.MySG.id]
-  iam_instance_profile = aws_iam_instance_profile.MyInstanceProfile.name
+  vpc_security_group_ids = [aws_security_group.MySG.id]
 }
 
 #create RDS instance
@@ -179,10 +209,11 @@ resource "aws_iam_role" "ec2_role" {
       },
       "Action": "sts:AssumeRole"
     }
-   ]
-  }
-  EOF
+  ]
 }
+EOF
+}
+
 
 resource "aws_iam_role" "rds_role" {
   name = "MyRDSRole"
