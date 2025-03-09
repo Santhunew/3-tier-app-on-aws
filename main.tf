@@ -176,13 +176,14 @@ resource "aws_cloudfront_distribution" "cdn" {
 
 #create EC2 instance
 resource "aws_instance" "MyEC2" {
-  count = 3
-  ami = "ami-0c55b159cbfafe1f0"
+  count         = 3
+  ami          = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
-  key_name = "Santhu"
-  subnet_id = aws_subnet.public[count.index % 2].id
-  vpc_security_group_ids = [aws_security_group.MySG.id]
+  key_name      = "Santhu"
+  subnet_id     = aws_subnet.public[count.index % 2].id
+  iam_instance_profile = aws_iam_instance_profile.MyInstanceProfile.name
 }
+
 
 #create RDS instance
 resource "aws_db_instance" "MyRDS" {
