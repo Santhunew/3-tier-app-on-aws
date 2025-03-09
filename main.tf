@@ -148,6 +148,7 @@ resource "aws_instance" "MyEC2" {
   count = 3
   ami = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
+  key_name = "Santhu"
   subnet_id = aws_subnet.public[count.index % 2].id
   security_groups = [aws_security_group.MySG.id]
   iam_instance_profile = aws_iam_instance_profile.MyInstanceProfile.name
@@ -183,8 +184,6 @@ resource "aws_iam_role" "ec2_role" {
   EOF
 }
 
-
-
 resource "aws_iam_role" "rds_role" {
   name = "MyRDSRole"
   assume_role_policy = <<EOF
@@ -201,33 +200,4 @@ resource "aws_iam_role" "rds_role" {
    ]
   }
     EOF
-}
-
-
-#Deploy AWS CloudFront, S3, EC2, and RDS
-
-#create S3 bucket
-resource "aws_s3_bucket" "MyBucket" {
-  bucket = "mybucket"
-  acl = "public-read"
-}
-
-#create EC2 instance
-resource "aws_instance" "MyEC2" {
-  Count = 3
-  ami = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
-  Subnet_id = aws_subnet.public[count.index % 2].id
-  security_groups = [aws_security_group.MySG.id]
-  iam_instance_profile = aws_iam_instance_profile.MyInstanceProfile.name
-}
-
-#create RDS instance
-resource "aws_db_instance" "MyRDS" {
-    count = 3
-    allocated_storage = 20
-    engine = "mysql"
-    engine_version = "5.7"
-    instance_class = "db.t2.micro"
-    identifier = "rds-instance-${count.index}"
 }
