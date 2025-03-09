@@ -127,18 +127,26 @@ resource "aws_s3_bucket_public_access_block" "public_access" {
 resource "aws_s3_bucket_policy" "public_policy" {
   bucket = aws_s3_bucket.MyBucket.id
   policy = jsonencode({
-    Version = "2012-10-17"
+    Version = "2012-10-17",
     Statement = [
       {
-        Sid       = "PublicReadGetObject"
-        Effect    = "Allow"
-        Principal = "*"
-        Action    = "s3:GetObject"
-        Resource  = "${aws_s3_bucket.MyBucket.arn}/*"
+        Sid       = "AllowCloudFrontAccess",
+        Effect    = "Allow",
+        Principal = {
+          Service = "cloudfront.amazonaws.com"
+        },
+        Action    = "s3:GetObject",
+        Resource  = "${aws_s3_bucket.MyBucket.arn}/*",
+        Condition = {
+          StringEquals = {
+            "AWS:SourceArn" = "arn:aws:cloudfront::YOUR_ACCOUNT_ID:distribution/YOUR_CLOUDFRONT_ID"
+          }
+        }
       }
     ]
   })
 }
+
 
 
 # create cloudfront
@@ -177,7 +185,7 @@ resource "aws_cloudfront_distribution" "cdn" {
 #create EC2 instance
 resource "aws_instance" "MyEC2" {
   count         = 3
-  ami          = "ami-0c55b159cbfafe1f0"
+  ami          = "ami-023a307f3d27ea427"
   instance_type = "t2.micro"
   key_name      = "Santhu"
   subnet_id     = aws_subnet.public[count.index % 2].id
@@ -186,12 +194,16 @@ resource "aws_instance" "MyEC2" {
 
 #create RDS instance
 resource "aws_db_instance" "MyRDS" {
-    count = 3
-    allocated_storage = 20
-    engine = "mysql"
-    engine_version = "5.7"
-    instance_class = "db.t2.micro"
-    identifier = "rds-instance-${count.index}"
+  count = 3
+  allocated_storage    = 20
+  engine               = "mysql"
+  engine_version       = "5.7"
+  instance_class       = "db.t2.micro"
+  identifier           = "rds-instance-${count.index}"
+  username             = "admin"  # ✅ Required field
+  password             = "Swaras@09!"  # ✅ Required field (Use AWS Secrets Manager in production)
+  publicly_accessible  = false
+  skip_final_snapshot  = true
 }
 
 
